@@ -1,0 +1,20 @@
+# Exercício 1 - Converter lista de strings para float
+dados = ["10", "20", "30", "40"]
+dados_float = list(map(float, dados))
+print("1) Lista convertida para float:", dados_float)
+
+# Exercício 2 - Imprimir apenas valores >= 0.8
+scores = [0.85, 0.45, 0.92, 0.67]
+print("\n2) Valores maiores ou iguais a 0.8:")
+for s in scores:
+    if s >= 0.8:
+        print(s)
+
+# Exercício 3 - Função de normalização
+def normalizar(lista):
+    max_val = max(lista)
+    return [x / max_val for x in lista]
+
+valores = [10, 20, 30, 40]
+valores_normalizados = normalizar(valores)
+print("\n3) Lista normalizada:", valores_normalizados)

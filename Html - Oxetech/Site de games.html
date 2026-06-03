@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameFlix</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-gray-900 text-white">
+
+    <!-- Cabeçalho -->
+    <div class="bg-gray-800 p-6 text-center shadow-lg">
+        <h1 class="text-3xl font-bold">GameFlix</h1>
+        <h2 class="text-xl">Bem-vindo ao nosso site de games</h2>
+    </div>
+
+    <!-- Menu -->
+    <nav class="bg-gray-800 p-4 flex flex-col md:flex-row gap-4 justify-center items-center">
+
+        <a href="#" class="text-lg font-semibold hover:text-blue-400 transition">
+            Catálogo
+        </a>
+
+        <a href="#" class="text-lg font-semibold hover:text-blue-400 transition">
+            Promoções
+        </a>
+
+        <a href="#" class="text-lg font-semibold hover:text-blue-400 transition">
+            Novidades
+        </a>
+
+        <a href="#" class="text-lg font-semibold hover:text-blue-400 transition">
+            Jogos Grátis
+        </a>
+
+        <a href="#" class="text-lg font-semibold hover:text-blue-400 transition">
+            Próximos Lançamentos
+        </a>
+
+        <div>
+            <span class="text-gray-400">Buscar:</span>
+
+            <input
+                type="text"
+                placeholder="Buscar games..."
+                class="bg-gray-700 text-white px-3 py-2 rounded-lg placeholder:text-gray-500 border border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+    </nav>
+
+    <!-- Cards -->
+    <div class="max-w-7xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- Card 1 -->
+        <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:scale-105 transition duration-300">
+
+            <img
+                class="w-full h-48 object-cover"
+                src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/header.jpg"
+                alt="CS2">
+
+            <div class="p-4">
+
+                <h2 class="text-xl font-bold mb-2">
+                    Counter Strike 2
+                </h2>
+
+                <p class="text-gray-400">
+                    Um dos jogos mais populares de tiro em primeira pessoa.
+                </p>
+
+                <a href="#"
+                    class="inline-block mt-4 bg-blue-500 px-4 py-2 rounded hover:bg-blue-600">
+                    Ver jogo
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:scale-105 transition duration-300">
+
+            <img
+                class="w-full h-48 object-cover"
+                src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/271590/header.jpg"
+                alt="GTA V">
+
+            <div class="p-4">
+
+                <h2 class="text-xl font-bold mb-2">
+                    Grand Theft Auto V
+                </h2>
+
+                <p class="text-gray-400">
+                    Um dos jogos mais aclamados da história.
+                </p>
+
+                <a href="#"
+                    class="inline-block mt-4 bg-blue-500 px-4 py-2 rounded hover:bg-blue-600">
+                    Ver jogo
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:scale-105 transition duration-300">
+
+            <img
+                class="w-full h-48 object-cover"
+                src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/208200/header.jpg"
+                alt="Doom 3">
+
+            <div class="p-4">
+
+                <h2 class="text-xl font-bold mb-2">
+                    Doom 3
+                </h2>
+
+                <p class="text-gray-400">
+                    Um clássico jogo de ação e terror.
+                </p>
+
+                <a href="#"
+                    class="inline-block mt-4 bg-blue-500 px-4 py-2 rounded hover:bg-blue-600">
+                    Ver jogo
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+<!-- Formulário --> 
+
+<section 
+class="max-w-7xl mx-auto p-6">
+
+<h2
+ class="text-2xl font-bold mb-4">
+        Inscreva-se para receber novidades
+</h2>
+
+<form id="newsletterForm" class="flex flex-col md:flex-row gap-4">
+
+    <input
+        type="email"
+        required
+        placeholder="Digite seu e-mail"
+        class="flex-1 bg-gray-700 text-white px-3 py-2 rounded-lg placeholder:text-gray-500 border border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+    <button
+        type="submit"
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        Inscrever-se
+    </button>
+
+</form>
+
+</section>
+
+<script>
+document.getElementById("newsletterForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    alert("E-mail cadastrado com sucesso!");
+});
+</script>
+
+</body>
+</html>

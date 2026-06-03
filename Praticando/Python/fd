@@ -1,0 +1,3 @@
+print (29,10,2025, sep= "-") # sep serve para separar
+
+
