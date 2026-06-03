@@ -1,4 +1,0 @@
-1,Senhor dos aneis,Aventura,2001,8.000000
-2,Up altas aventuras,aventura,2004,9.000000
-3,thor ragnarok,super heroi,2020,5.000000
-4,Up,Desenho,2012,10.000000
