@@ -30,9 +30,9 @@ const prisma = new PrismaClient(); // Liga a conexão com o banco de dados
 const app = express(); // Cria o nosso servidor web
 
 // Regras gerais do nosso servidor (os "app.use"):
-app.use(express.json()); // Ensina o servidor a ler pacotes de dados no formato JSON
-app.use(cors()); // Libera a porta para o site conversar com a gente
+app.use(express.json()); // Ensina o servidor a ler pacotes de dados no formato JSONapp.use(cors()); // Libera a porta para o site conversar com a gente
 app.use(cookieParser()); // Ensina o servidor a mexer na "mochila" de cookies do usuário
+app.use(cors());
 
 // ==============================================================================
 // 3. ROTAS DE NEWSLETTER (Atendimento para captura de e-mails)
@@ -100,18 +100,15 @@ app.post("/api/jogos", async (req, res) => {
 
 // Rota GET: "Estou preparado para LER e ENVIAR dados".
 // Serve para o seu site pedir: "Ei servidor, me manda todos os jogos cadastrados!"
+// Rota para BUSCAR os jogos e mandar para o Front-end
+
 app.get("/api/jogos", async (req, res) => {
   try {
-    const jogos = await prisma.jogo.findMany({
-      include: {
-        categoria: true, // "Além do jogo, traga o nome da categoria junto, por favor."
-      },
-    });
-
-    res.status(200).json(jogos); // 200 = "OK, Pedido atendido com sucesso!"
+    const jogos = await prisma.jogo.findMany(); // Puxa todos os registros da tabela "Jogo"
+    res.status(200).json(jogos); // Entrega o pacote de dados para o site
   } catch (erro) {
-    console.error("Erro ao listar jogos:", erro);
-    res.status(500).json({ error: "Erro ao obter o catálogo de jogos." });
+    console.error("Erro ao buscar os jogos:", erro);
+    res.status(500).json({ error: "Erro interno ao carregar o catálogo." });
   }
 });
 
@@ -225,6 +222,6 @@ app.get("/api/perfil", (req, res) => {
 // ==============================================================================
 const PORTA = 3001; // O canal de rádio que o servidor vai sintonizar
 
-app.listen(PORTA, () => {
-  console.log(`Servidor rodando na porta ${PORTA} 🚀`); // Aviso no terminal
+app.listen(3001, () => {
+  console.log("Servidor rodando na porta 3001 🚀");
 });

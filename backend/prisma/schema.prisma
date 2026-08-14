@@ -4,42 +4,35 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
 }
 
-// Tabela para guardar os e-mails da Newsletter
 model Inscrito {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  createdAt DateTime @default(now())
+  id    String @id @default(uuid())
+  email String @unique
 }
 
-// Nova tabela para as Categorias dos Jogos
 model Categoria {
   id    String @id @default(uuid())
-  nome  String @unique
-  jogos Jogo[] // Relação: Uma categoria tem muitos jogos
+  nome  String
+  jogos Jogo[]
 }
 
-// Nova tabela para o Catálogo de Jogos
 model Jogo {
   id          String    @id @default(uuid())
   titulo      String
   descricao   String?
-  ano         Int
+  ano         Int?
   capaUrl     String?
-  createdAt   DateTime  @default(now())
   
-  // Configuração do Relacionamento com Categoria
-  categoriaId String
+  // Configuração do Relacionamento com Categoria (Sem o ObjectId!)
+  categoriaId String    
   categoria   Categoria @relation(fields: [categoriaId], references: [id])
-} // <-- A chave fechando o Jogo estava faltando aqui!
+}
 
-// Tabela para gerenciar a Autenticação (Requisito de Segurança)
 model Usuario {
-  id        String   @id @default(uuid())
-  nome      String
-  email     String   @unique
-  senha     String   // Aqui nós vamos salvar o hash da senha, nunca a original!
-  createdAt DateTime @default(now())
+  id    String @id @default(uuid())
+  nome  String
+  email String @unique
+  senha String
 }

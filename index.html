@@ -3,46 +3,44 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>GameFlix</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
 
   <body class="bg-gray-900 text-white">
-    <!-- Cabeçalho -->
-    <div class="bg-gray-800 p-6 text-center shadow-lg">
+    <!-- CABEÇALHO -->
+    <header class="bg-gray-800 p-6 text-center shadow-lg">
       <h1 class="text-3xl font-bold">GameFlix</h1>
       <h2 class="text-xl">Bem-vindo ao nosso site de games</h2>
-    </div>
+    </header>
 
-    <!-- Menu -->
+    <!-- MENU -->
     <nav
       class="bg-gray-800 p-4 flex flex-col md:flex-row gap-4 justify-center items-center"
     >
       <a href="#" class="text-lg font-semibold hover:text-blue-400 transition">
         Catálogo
       </a>
-
       <a href="#" class="text-lg font-semibold hover:text-blue-400 transition">
         Promoções
       </a>
-
       <a href="#" class="text-lg font-semibold hover:text-blue-400 transition">
         Novidades
       </a>
-
       <a href="#" class="text-lg font-semibold hover:text-blue-400 transition">
         Jogos Grátis
       </a>
-
       <a href="#" class="text-lg font-semibold hover:text-blue-400 transition">
         Próximos Lançamentos
       </a>
 
+      <!-- BUSCA -->
       <div>
-        <span class="text-gray-400">Buscar:</span>
-
+        <span class="text-gray-400"> Buscar: </span>
         <input
+          id="campoBusca"
           type="text"
           placeholder="Buscar games..."
           class="bg-gray-700 text-white px-3 py-2 rounded-lg placeholder:text-gray-500 border border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -50,87 +48,20 @@
       </div>
     </nav>
 
-    <!-- Cards -->
-    <div
-      class="max-w-7xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-    >
-      <!-- Card 1 -->
-      <div
-        class="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:scale-105 transition duration-300"
+    <!-- CATÁLOGO -->
+    <main>
+      <!-- AQUI ESTÁ A CORREÇÃO: O ID agora é "catalogo-jogos" para o script.js conseguir achar! -->
+      <section
+        id="catalogo-jogos"
+        class="max-w-7xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
       >
-        <img
-          class="w-full h-48 object-cover"
-          src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/header.jpg"
-          alt="CS2"
-        />
+        <p class="text-gray-400 col-span-full text-center">
+          Carregando jogos...
+        </p>
+      </section>
+    </main>
 
-        <div class="p-4">
-          <h2 class="text-xl font-bold mb-2">Counter Strike 2</h2>
-
-          <p class="text-gray-400">
-            Um dos jogos mais populares de tiro em primeira pessoa.
-          </p>
-
-          <a
-            href="#"
-            class="inline-block mt-4 bg-blue-500 px-4 py-2 rounded hover:bg-blue-600"
-          >
-            Ver jogo
-          </a>
-        </div>
-      </div>
-
-      <!-- Card 2 -->
-      <div
-        class="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:scale-105 transition duration-300"
-      >
-        <img
-          class="w-full h-48 object-cover"
-          src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/271590/header.jpg"
-          alt="GTA V"
-        />
-
-        <div class="p-4">
-          <h2 class="text-xl font-bold mb-2">Grand Theft Auto V</h2>
-
-          <p class="text-gray-400">Um dos jogos mais aclamados da história.</p>
-
-          <a
-            href="#"
-            class="inline-block mt-4 bg-blue-500 px-4 py-2 rounded hover:bg-blue-600"
-          >
-            Ver jogo
-          </a>
-        </div>
-      </div>
-
-      <!-- Card 3 -->
-      <div
-        class="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:scale-105 transition duration-300"
-      >
-        <img
-          class="w-full h-48 object-cover"
-          src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/208200/header.jpg"
-          alt="Doom 3"
-        />
-
-        <div class="p-4">
-          <h2 class="text-xl font-bold mb-2">Doom 3</h2>
-
-          <p class="text-gray-400">Um clássico jogo de ação e terror.</p>
-
-          <a
-            href="#"
-            class="inline-block mt-4 bg-blue-500 px-4 py-2 rounded hover:bg-blue-600"
-          >
-            Ver jogo
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Formulário -->
-
+    <!-- NEWSLETTER -->
     <section class="max-w-7xl mx-auto p-6">
       <h2 class="text-2xl font-bold mb-4">
         Inscreva-se para receber novidades
@@ -138,6 +69,7 @@
 
       <form id="newsletterForm" class="flex flex-col md:flex-row gap-4">
         <input
+          id="emailNewsletter"
           type="email"
           required
           placeholder="Digite seu e-mail"
@@ -153,42 +85,7 @@
       </form>
     </section>
 
-    <script>
-      document
-        .getElementById("newsletterForm")
-        .addEventListener("submit", async function (event) {
-          event.preventDefault();
-
-          // Pega o e-mail que o usuário digitou
-          const emailInput = document.querySelector(
-            'input[type="email"]',
-          ).value;
-
-          try {
-            // Dispara o pacote para o seu servidor Node.js
-            const response = await fetch(
-              "http://localhost:3001/api/newsletter",
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email: emailInput }),
-              },
-            );
-
-            // Se o servidor responder que deu tudo certo (status 200)
-            if (response.ok) {
-              alert("Sucesso! E-mail integrado com o servidor.");
-              document.querySelector('input[type="email"]').value = ""; // Limpa o campo
-            } else {
-              alert("Ops! O servidor recusou a inscrição.");
-            }
-          } catch (error) {
-            console.error(error);
-            alert("Erro ao tentar conectar com a API. O servidor está ligado?");
-          }
-        });
-    </script>
+    <!-- JAVASCRIPT -->
+    <script src="script.js"></script>
   </body>
 </html>
