@@ -2,7 +2,7 @@
 // CONFIGURAÇÃO DA API
 // ==============================================================================
 
-const API_URL = "http://localhost:3001";
+const API_URL = "https://projeto-desenvolvimento-web-production.up.railway.app";
 
 // ==============================================================================
 // CATÁLOGO DE JOGOS
