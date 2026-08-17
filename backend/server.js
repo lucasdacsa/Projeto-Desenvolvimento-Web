@@ -176,7 +176,8 @@ app.get("/api/perfil", (req, res) => {
 // ==============================================================================
 // 8. INICIAR O SERVIDOR (Ligando a chave geral)
 // ==============================================================================
-const PORTA = 3001;
+// O process.env.PORT pega a porta dinâmica da nuvem. Se não existir, usa a 3001.
+const PORTA = process.env.PORT || 3001;
 
 app.listen(PORTA, () => {
   console.log(`Servidor rodando na porta ${PORTA} 🚀`);
