@@ -1,74 +1,50 @@
 // ==============================================================================
 // 1. IMPORTAÇÕES DE BIBLIOTECAS (Pegando as ferramentas na caixa de ferramentas)
 // ==============================================================================
-// O dotenv é o "manual de instruções". Ele lê o arquivo .env e ensina o servidor a usar as variáveis de ambiente.
 import "dotenv/config";
-// O Express é o "gerente" do nosso servidor. Ele escuta os pedidos da internet.
 import express from "express";
-
-// O Prisma é o "tradutor". Ele pega o que escrevemos em JavaScript e traduz para o banco de dados (SQLite) entender.
 import { PrismaClient } from "@prisma/client";
-
-// O CORS é o "porteiro". Ele permite que o seu Front-end (HTML/Site) converse com este Back-end sem ser bloqueado por questões de segurança.
-import cors from "cors";
-
-// --- Ferramentas de Segurança (Para a nota de Autenticação) ---
-
-// O Bcrypt é o "triturador". Ele pega a senha (ex: "123456") e transforma num código maluco ("$2b$10$wTf...") para ninguém descobrir.
+import cors from "cors"; // <-- O porteiro (já estava importado certinho aqui!)
 import bcrypt from "bcryptjs";
-
-// O JWT fabrica "crachás VIP". Quando o usuário faz login, ele ganha um crachá virtual para entrar nas áreas protegidas.
 import jwt from "jsonwebtoken";
-
-// O Cookie-Parser é a "mochila". Ele permite que o servidor guarde e leia o crachá VIP direto no navegador do usuário.
 import cookieParser from "cookie-parser";
 
 // ==============================================================================
 // 2. INICIALIZAÇÃO E CONFIGURAÇÃO (Ligando as máquinas)
 // ==============================================================================
 const prisma = new PrismaClient(); // Liga a conexão com o banco de dados
-const app = express(); // Cria o nosso servidor web
+const app = express();
 
 // Regras gerais do nosso servidor (os "app.use"):
-app.use(express.json()); // Ensina o servidor a ler pacotes de dados no formato JSONapp.use(cors()); // Libera a porta para o site conversar com a gente
+app.use(cors()); // Libera a porta para o site Vercel conversar com a API
+app.use(express.json()); // Ensina o servidor a ler pacotes de dados no formato JSON
 app.use(cookieParser()); // Ensina o servidor a mexer na "mochila" de cookies do usuário
-app.use(cors());
 
 // ==============================================================================
 // 3. ROTAS DE NEWSLETTER (Atendimento para captura de e-mails)
 // ==============================================================================
-// app.post significa: "Estou preparado para RECEBER dados e salvar".
 app.post("/api/newsletter", async (req, res) => {
   try {
-    // "Tente fazer isso:"
-    const { email } = req.body; // req.body é o formulário que o cliente preencheu
-
-    // Manda o Prisma criar uma linha nova na tabela 'Inscrito'
+    const { email } = req.body;
     const novoInscrito = await prisma.inscrito.create({
       data: { email: email },
     });
-
-    res.status(201).json(novoInscrito); // res = Resposta! 201 significa "Criado com Sucesso"
+    res.status(201).json(novoInscrito);
   } catch (erro) {
-    // "Se der algum erro no meio do caminho, capture aqui e não deixe o servidor explodir"
     console.error("Erro na newsletter:", erro);
-    res.status(500).json({ error: "Erro ao se inscrever." }); // 500 = Erro interno do servidor
+    res.status(500).json({ error: "Erro ao se inscrever." });
   }
 });
 
 // ==============================================================================
 // 4. ROTAS DE CATÁLOGO (Categorias e Jogos)
 // ==============================================================================
-
-// Rota para CRIAR categorias
 app.post("/api/categorias", async (req, res) => {
   try {
-    const { nome } = req.body; // Pega o nome digitado ("Ação", "RPG", etc)
-
+    const { nome } = req.body;
     const novaCategoria = await prisma.categoria.create({
       data: { nome: nome },
     });
-
     res.status(201).json(novaCategoria);
   } catch (erro) {
     console.error("Erro ao criar categoria:", erro);
@@ -76,21 +52,18 @@ app.post("/api/categorias", async (req, res) => {
   }
 });
 
-// Rota para CRIAR jogos e vincular com as categorias (Requisito de Relacionamento)
 app.post("/api/jogos", async (req, res) => {
   try {
     const { titulo, descricao, ano, capaUrl, categoriaId } = req.body;
-
     const novoJogo = await prisma.jogo.create({
       data: {
         titulo: titulo,
         descricao: descricao,
         ano: ano,
         capaUrl: capaUrl,
-        categoriaId: categoriaId, // É aqui que o banco amarra o jogo na categoria!
+        categoriaId: categoriaId,
       },
     });
-
     res.status(201).json(novoJogo);
   } catch (erro) {
     console.error("Erro ao criar jogo:", erro);
@@ -98,14 +71,10 @@ app.post("/api/jogos", async (req, res) => {
   }
 });
 
-// Rota GET: "Estou preparado para LER e ENVIAR dados".
-// Serve para o seu site pedir: "Ei servidor, me manda todos os jogos cadastrados!"
-// Rota para BUSCAR os jogos e mandar para o Front-end
-
 app.get("/api/jogos", async (req, res) => {
   try {
-    const jogos = await prisma.jogo.findMany(); // Puxa todos os registros da tabela "Jogo"
-    res.status(200).json(jogos); // Entrega o pacote de dados para o site
+    const jogos = await prisma.jogo.findMany();
+    res.status(200).json(jogos);
   } catch (erro) {
     console.error("Erro ao buscar os jogos:", erro);
     res.status(500).json({ error: "Erro interno ao carregar o catálogo." });
@@ -119,26 +88,22 @@ app.post("/api/cadastro", async (req, res) => {
   try {
     const { nome, email, senha } = req.body;
 
-    // Passo 1: Verifica se esse e-mail já existe no banco
     const usuarioExistente = await prisma.usuario.findUnique({
       where: { email: email },
     });
 
     if (usuarioExistente) {
-      // Se já existir...
-      return res.status(400).json({ error: "Este e-mail já está em uso." }); // 400 = "Cliente, você enviou algo errado"
+      return res.status(400).json({ error: "Este e-mail já está em uso." });
     }
 
-    // Passo 2: Embaralha a senha com a ferramenta Bcrypt
-    const salt = await bcrypt.genSalt(10); // Cria um fator de mistura
-    const senhaHash = await bcrypt.hash(senha, salt); // Transforma a senha real no Hash (ex: $2b$10$...)
+    const salt = await bcrypt.genSalt(10);
+    const senhaHash = await bcrypt.hash(senha, salt);
 
-    // Passo 3: Salva o usuário no banco (com a senha escondida!)
     const novoUsuario = await prisma.usuario.create({
       data: {
         nome: nome,
         email: email,
-        senha: senhaHash, // Nunca guarde a senha pura!
+        senha: senhaHash,
       },
     });
 
@@ -154,32 +119,28 @@ app.post("/api/cadastro", async (req, res) => {
 // ==============================================================================
 app.post("/api/login", async (req, res) => {
   try {
-    const { email, senha } = req.body; // Pega o email e senha que o cliente digitou no form
+    const { email, senha } = req.body;
 
-    // 1. Procura o cliente no banco pelo e-mail
     const usuario = await prisma.usuario.findUnique({
       where: { email: email },
     });
 
     if (!usuario) {
-      return res.status(401).json({ error: "E-mail ou senha incorretos." }); // 401 = Não autorizado
+      return res.status(401).json({ error: "E-mail ou senha incorretos." });
     }
 
-    // 2. Pega a senha que ele digitou agora e compara com a mistura (Hash) do banco
     const senhaValida = await bcrypt.compare(senha, usuario.senha);
     if (!senhaValida) {
       return res.status(401).json({ error: "E-mail ou senha incorretos." });
     }
 
-    // 3. Se a senha bateu, fabricamos o crachá VIP (Token)
     const token = jwt.sign({ id: usuario.id }, "CHAVE_SECRETA_DO_PROJETO", {
-      expiresIn: "1h", // O crachá vale por 1 hora
+      expiresIn: "1h",
     });
 
-    // 4. Guardamos o crachá na mochila (Cookie) do cliente
     res.cookie("token", token, {
-      httpOnly: true, // Protege contra hackers roubarem o crachá
-      secure: false, // Falso porque não temos HTTPS (cadeado verde) no ambiente local
+      httpOnly: true,
+      secure: false,
     });
 
     res.status(200).json({ message: "Login realizado com sucesso!" });
@@ -193,21 +154,16 @@ app.post("/api/login", async (req, res) => {
 // 7. ROTA PRIVADA (Área VIP - Só entra quem tem o crachá)
 // ==============================================================================
 app.get("/api/perfil", (req, res) => {
-  // O porteiro tenta puxar o crachá (Token) da mochila (Cookie) do cliente
   const token = req.cookies.token;
 
   if (!token) {
-    // Se não tiver crachá...
     return res
-      .status(403) // 403 = Proibido!
+      .status(403)
       .json({ error: "Acesso negado. Você precisa fazer login primeiro!" });
   }
 
   try {
-    // Verifica se o crachá é falso ou se já venceu a validade de 1 hora
     const dadosDoToken = jwt.verify(token, "CHAVE_SECRETA_DO_PROJETO");
-
-    // Se estiver tudo certo, deixa o cliente entrar na rota
     res.status(200).json({
       message: "Bem-vindo à área VIP protegida!",
       id_do_usuario: dadosDoToken.id,
@@ -220,8 +176,8 @@ app.get("/api/perfil", (req, res) => {
 // ==============================================================================
 // 8. INICIAR O SERVIDOR (Ligando a chave geral)
 // ==============================================================================
-const PORTA = 3001; // O canal de rádio que o servidor vai sintonizar
+const PORTA = 3001;
 
-app.listen(3001, () => {
-  console.log("Servidor rodando na porta 3001 🚀");
+app.listen(PORTA, () => {
+  console.log(`Servidor rodando na porta ${PORTA} 🚀`);
 });
